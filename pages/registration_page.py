@@ -1,11 +1,12 @@
 from selene import browser, have
-import os
+from pathlib import Path
+from data.users import User
 
 
 class RegistrationPage:
 
     def open(self):
-        browser.open('/')
+        browser.open('/automation-practice-form')
 
     def fill(self, user):
         browser.element('#firstName').type(user.first_name)
@@ -18,32 +19,34 @@ class RegistrationPage:
         browser.element('.react-datepicker__day--011').click()
         browser.element('#subjectsInput').type(user.subject).press_enter()
         browser.element('[for="hobbies-checkbox-1"]').click()
-        browser.element('#uploadPicture').send_keys(os.path.abspath(user.file))
         browser.element('#currentAddress').type(user.current_address)
         browser.element('#react-select-3-input').type(user.state).press_enter()
         browser.element('#react-select-4-input').type(user.city).press_enter()
 
-    def submit(self):
-        browser.element('.practice-form-wrapper [id=submit]').click()
+    def path(file):
+        return str(Path(__file__).parent.parent.joinpath(f'data/img/{file}'))
 
-    def should_have_registered(self, user):
+    def submit(self):
+        browser.element('.practice-form-wrapper #submit').click()
+
+    def should_have_registered(self):
         browser.element('#example-modal-sizes-title-lg').should(
             have.text('Thanks for submitting the form'))
 
-    def check_for_submit_form_is_visible(self):
+    def check_for_submit_form_is_visible(self, users: User):
         browser.element('#example-modal-sizes-title-lg').should(
             have.text('Thanks for submitting the form'))
 
         browser.element('.table').all('tr td:nth-child(2)').should(have.texts
             (
-            'Kirill Sharevich',
-            'email@example.com',
-            'Male',
-            '9119119191',
-            '11 April,2024',
-            'Maths',
-            'Sports',
-            'pivottable1.png',
-            'Saint-Petersburg',
-            'Haryana Karnal'
+            f'{users.first_name} {users.last_name}',
+            users.user_email,
+            users.user_gender,
+            users.user_number,
+            users.date,
+            users.subject,
+            users.hobby,
+            users.file,
+            users.current_address,
+            f'{users.state} {users.city}'
         ))
