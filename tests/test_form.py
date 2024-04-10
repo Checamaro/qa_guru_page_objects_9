@@ -12,7 +12,7 @@ def test_fill_form(browser_management):
     registration_page.fill_birthdate()
     registration_page.fill_subject('Maths')
     registration_page.choose_hobbies_checkbox()
-    registration_page.upload_picture('../img/pivottable1.png')
+    registration_page.upload_picture()
     registration_page.fill_current_address('Saint-Petersburg')
     registration_page.choose_state('Haryana')
     registration_page.fill_city('Karnal')
@@ -20,3 +20,4 @@ def test_fill_form(browser_management):
 
     registration_page.check_for_submit_form_is_visible()
     registration_page.assert_registered_info()
+

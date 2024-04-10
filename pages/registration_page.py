@@ -1,11 +1,13 @@
 from selene import browser, have
-import os
+
+from pathlib import Path
+
 
 
 class RegistrationPage:
 
     def open(self):
-        browser.open('/')
+        browser.open('/automation-practice-form')
 
     def fill_first_name(self, value):
         browser.element('#firstName').type(value)
@@ -41,9 +43,8 @@ class RegistrationPage:
         browser.element('[for="hobbies-checkbox-1"]').click()
         return self
 
-    def upload_picture(self, file_path):
-        browser.element('#uploadPicture').send_keys(os.path.abspath(file_path))
-        return self
+    def upload_picture(file):
+        return str(Path(__file__).parent.parent.joinpath(f'data/img/{file}'))
 
     def fill_current_address(self, address):
         browser.element('#currentAddress').type(address)
@@ -58,7 +59,7 @@ class RegistrationPage:
         return self
 
     def submit_registration(self):
-        browser.element('.practice-form-wrapper [id=submit]').click()
+        browser.element('.practice-form-wrapper #submit').click()
         return self
 
     def check_for_submit_form_is_visible(self):
