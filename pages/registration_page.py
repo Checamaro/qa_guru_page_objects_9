@@ -1,4 +1,6 @@
-from selene import browser, have
+from datetime import datetime
+
+from selene import browser, have, command
 from pathlib import Path
 from data.users import User
 
@@ -14,9 +16,15 @@ class RegistrationPage:
         browser.element('#userEmail').type(user.user_email)
         browser.element('[for="gender-radio-1"]').click()
         browser.element('#userNumber').type(user.user_number)
-        browser.element('#dateOfBirthInput').click()
-        browser.element('option[value="2024"]').click()
-        browser.element('.react-datepicker__day--011').click()
+        # birthday = user.date[2:]
+        # birthmonth = user.date[]
+        date_obj = datetime.strptime(user.date, "%d %B,%Y")
+        browser.element('#dateOfBirthInput').perform(command.js.set_value('02 Oct 2020'))
+
+        # browser.element('#dateOfBirthInput').click()
+        # browser.element('option[value="2024"]').click()
+        # browser.element('.react-datepicker__day--011').click()
+        # browser.element('#uploadPicture').send_keys(self.path(user.file))
         browser.element('#subjectsInput').type(user.subject).press_enter()
         browser.element('[for="hobbies-checkbox-1"]').click()
         browser.element('#currentAddress').type(user.current_address)

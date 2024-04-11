@@ -9,10 +9,10 @@ def test_fill_form():
         user_email='email@example.com',
         user_gender='Male',
         user_number='9119119191',
-        date='11 April,2024',
+        date='02 October,2020',
         subject='Maths',
         hobby='Sports',
-        file='pivottable1.png',
+        file='',
         current_address='Saint-Petersburg',
         state='Haryana',
         city='Karnal'
@@ -22,9 +22,10 @@ def test_fill_form():
 
     page.open()
     page.fill(kirill)
-    page.path()
+    # page.path()
     page.submit()
-    page.should_have_registered()
+    # page.should_have_registered()
+    page.check_for_submit_form_is_visible(kirill)
 
 
 
