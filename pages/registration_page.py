@@ -1,7 +1,8 @@
+import os
+
 from selene import browser, have
 
-from pathlib import Path
-
+import data
 
 
 class RegistrationPage:
@@ -9,77 +10,76 @@ class RegistrationPage:
     def open(self):
         browser.open('/automation-practice-form')
 
-    def fill_first_name(self, value):
-        browser.element('#firstName').type(value)
-        return self
+    def fill_first_name(self, first_name):
+        browser.element('#firstName').type(first_name)
 
-    def fill_last_name(self, value):
-        browser.element('#lastName').type(value)
-        return self
+    def fill_last_name(self, last_name):
+        browser.element('#lastName').type(last_name)
 
-    def fill_email(self, value):
-        browser.element('#userEmail').type(value)
-        return self
+    def fill_email(self, email):
+        browser.element('#userEmail').type(email)
 
-    def fill_gender(self):
-        browser.element('[for="gender-radio-1"]').click()
-        return self
+    def fill_gender(self, gender):
+        browser.all('[name=gender]').element_by(have.value(gender)).element('..').click()
 
-    def fill_number(self, value):
-        browser.element('#userNumber').type(value)
-        return self
+    def fill_number(self, number):
+        browser.element('#userNumber').type(number)
 
-    def fill_birthdate(self):
+    def fill_birthdate(self, year, month, day):
         browser.element('#dateOfBirthInput').click()
-        browser.element('option[value="2024"]').click()
-        browser.element('.react-datepicker__day--011').click()
-        return self
+        browser.element('.react-datepicker__year-select').type(year)
+        browser.element('.react-datepicker__month-select').type(month)
+        browser.element(
+            f'.react-datepicker__day--0{day}:not(.react-datepicker__day--outside-month)'
+        ).click()
 
     def fill_subject(self, value):
         browser.element('#subjectsInput').type(value).press_enter()
-        return self
 
-    def choose_hobbies_checkbox(self):
-        browser.element('[for="hobbies-checkbox-1"]').click()
-        return self
+    def choose_hobbies_checkbox(self, hobby):
+        if hobby == "Sports":
+            browser.element('[for="hobbies-checkbox-1"]').click()
+        elif hobby == "Reading":
+            browser.element('[for="hobbies-checkbox-2"]').click()
+        elif hobby == "Music":
+            browser.element('[for="hobbies-checkbox-3"]').click()
 
-    def upload_picture(file):
-        return str(Path(__file__).parent.parent.joinpath(f'data/img/{file}'))
+    def upload_picture(self, file):
+        browser.element('#uploadPicture').set_value(
+            os.path.abspath(
+                os.path.join(os.path.dirname(data.__file__), f'img/{file}')
+            )
+        )
 
     def fill_current_address(self, address):
         browser.element('#currentAddress').type(address)
-        return self
 
     def choose_state(self, state):
         browser.element('#react-select-3-input').type(state).press_enter()
-        return self
 
     def fill_city(self, city):
         browser.element('#react-select-4-input').type(city).press_enter()
-        return self
 
     def submit_registration(self):
         browser.element('.practice-form-wrapper #submit').click()
-        return self
 
-    def check_for_submit_form_is_visible(self):
+    def check_for_submit_form_is_visible(self, text):
         browser.element('#example-modal-sizes-title-lg').should(
-            have.text('Thanks for submitting the form'))
+            have.text(text))
         return self
 
-    def assert_registered_info(self):
-        browser.element('.table').all('tr td:nth-child(2)').should(have.texts
-            (
-            'Kirill Sharevich',
-            'email@example.com',
-            'Male',
-            '9119119191',
-            '11 April,2024',
-            'Maths',
-            'Sports',
-            'pivottable1.png',
-            'Saint-Petersburg',
-            'Haryana Karnal'
+    def assert_registered_info(self, first_name_and_second_name, email, gender, phone_number, birthday, subject, hobby,
+                               file, address, state_and_city):
+        browser.element('.table').all('td').even.should(have.texts(
+
+            first_name_and_second_name,
+            email,
+            gender,
+            phone_number,
+            birthday,
+            subject,
+            hobby,
+            file,
+            address,
+            state_and_city
         ))
-        return self
-

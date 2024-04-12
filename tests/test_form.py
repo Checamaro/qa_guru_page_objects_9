@@ -7,17 +7,28 @@ def test_fill_form(browser_management):
     registration_page.fill_first_name('Kirill')
     registration_page.fill_last_name('Sharevich')
     registration_page.fill_email('email@example.com')
-    registration_page.fill_gender()
+    registration_page.fill_gender('Male')
     registration_page.fill_number('9119119191')
-    registration_page.fill_birthdate()
+    registration_page.fill_birthdate('1988', 'April','30')
     registration_page.fill_subject('Maths')
-    registration_page.choose_hobbies_checkbox()
-    registration_page.upload_picture()
+    registration_page.choose_hobbies_checkbox('Sports')
+    registration_page.upload_picture('pivottable1.png')
     registration_page.fill_current_address('Saint-Petersburg')
     registration_page.choose_state('Haryana')
     registration_page.fill_city('Karnal')
     registration_page.submit_registration()
 
-    registration_page.check_for_submit_form_is_visible()
-    registration_page.assert_registered_info()
+    registration_page.check_for_submit_form_is_visible('Thanks for submitting the form')
+    registration_page.assert_registered_info(
+        'Kirill Sharevich',
+        'email@example.com',
+        'Male',
+        '9119119191',
+        '30 April,1988',
+        'Maths',
+        'Sports',
+        'pivottable1.png',
+        'Saint-Petersburg',
+        'Haryana Karnal'
+     )
 

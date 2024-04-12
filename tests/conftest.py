@@ -11,3 +11,4 @@ def browser_management():
     browser.config.window_height = 1080
     yield
     browser.quit()
+
