@@ -7,7 +7,9 @@ class User:
     user_email: str
     user_number: str
     user_gender: str
-    date: str
+    year: str
+    month: str
+    day: str
     subject: str
     hobby: str
     file: str

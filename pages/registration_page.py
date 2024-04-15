@@ -1,7 +1,10 @@
+import os
 from datetime import datetime
 
 from selene import browser, have, command
 from pathlib import Path
+
+import data
 from data.users import User
 
 
@@ -14,32 +17,29 @@ class RegistrationPage:
         browser.element('#firstName').type(user.first_name)
         browser.element('#lastName').type(user.last_name)
         browser.element('#userEmail').type(user.user_email)
-        browser.element('[for="gender-radio-1"]').click()
+        browser.all('[name=gender]').element_by(have.value(user.user_gender)).element('..').click()
         browser.element('#userNumber').type(user.user_number)
-        # birthday = user.date[2:]
-        # birthmonth = user.date[]
-        date_obj = datetime.strptime(user.date, "%d %B,%Y")
-        browser.element('#dateOfBirthInput').perform(command.js.set_value('02 Oct 2020'))
-
-        # browser.element('#dateOfBirthInput').click()
-        # browser.element('option[value="2024"]').click()
-        # browser.element('.react-datepicker__day--011').click()
-        # browser.element('#uploadPicture').send_keys(self.path(user.file))
-        browser.element('#subjectsInput').type(user.subject).press_enter()
-        browser.element('[for="hobbies-checkbox-1"]').click()
+        browser.element('#dateOfBirthInput').click()
+        browser.element('.react-datepicker__year-select').type(user.year)
+        browser.element('.react-datepicker__month-select').type(user.month)
+        browser.element(
+            f'.react-datepicker__day--0{user.day}:not(.react-datepicker__day--outside-month)'
+        ).click()
+        for subject in user.subject.split(", "):
+            browser.element('#subjectsInput').type(subject).press_enter()
+        for hobby in user.hobby.split(", "):
+            browser.all('.custom-checkbox').element_by(have.text(hobby)).click()
+        browser.element('#uploadPicture').set_value(
+            os.path.abspath(
+                os.path.join(os.path.dirname(data.__file__), f'img/{user.file}')
+            )
+        )
         browser.element('#currentAddress').type(user.current_address)
         browser.element('#react-select-3-input').type(user.state).press_enter()
         browser.element('#react-select-4-input').type(user.city).press_enter()
 
-    def path(file):
-        return str(Path(__file__).parent.parent.joinpath(f'data/img/{file}'))
-
     def submit(self):
         browser.element('.practice-form-wrapper #submit').click()
-
-    def should_have_registered(self):
-        browser.element('#example-modal-sizes-title-lg').should(
-            have.text('Thanks for submitting the form'))
 
     def check_for_submit_form_is_visible(self, users: User):
         browser.element('#example-modal-sizes-title-lg').should(
@@ -51,7 +51,7 @@ class RegistrationPage:
             users.user_email,
             users.user_gender,
             users.user_number,
-            users.date,
+            f'{users.day} {users.month},{users.year}',
             users.subject,
             users.hobby,
             users.file,

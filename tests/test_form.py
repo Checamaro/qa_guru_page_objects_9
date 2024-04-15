@@ -9,23 +9,22 @@ def test_fill_form():
         user_email='email@example.com',
         user_gender='Male',
         user_number='9119119191',
-        date='02 October,2020',
+        year='1988',
+        month='April',
+        day='30',
         subject='Maths',
         hobby='Sports',
-        file='',
+        file='pivottable1.png',
         current_address='Saint-Petersburg',
         state='Haryana',
         city='Karnal'
     )
 
-    page = RegistrationPage()
-
-    page.open()
-    page.fill(kirill)
-    # page.path()
-    page.submit()
-    # page.should_have_registered()
-    page.check_for_submit_form_is_visible(kirill)
+    registration_page = RegistrationPage()
+    registration_page.open()
+    registration_page.fill(kirill)
+    registration_page.submit()
+    registration_page.check_for_submit_form_is_visible(kirill)
 
 
 
